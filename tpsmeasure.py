@@ -21,8 +21,8 @@ transno = 5000
 for i in range(transno):
 	newaddress = Aclientproxy.call('getnewaddress')
 	txid = Bclientproxy.sendtoaddress(newaddress, 0.01 * COIN)
-	if not (i % 100):
-		print('i:',i)
+#	if not (i % 100):
+#		print('i:',i)
 		
 preblockheight = Bclientproxy.getblockcount()
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import time, os
+import numpy as np
+import matplotlib.pyplot as plt
 
 import bitcoin.rpc
 from bitcoin.wallet import CBitcoinAddress
@@ -21,25 +23,31 @@ filename = pwd + '/log/delaydata.txt'
 count = 10
 f = open(filename, "w")
 
+datamatri = []
+
 for i in range(count):
-	newaddress = Bclientproxy.call('getnewaddress')
-	txid = Aclientproxy.sendtoaddress(newaddress, 1 * COIN)
-	notconfirm = True
-	startpoint = time.time()
-	while notconfirm:
-		txinfo = Aclientproxy.gettransaction(txid)
-		if txinfo['confirmations'] == 0:
-			time.sleep(0.05)
-		else:
-			stoppoint = time.time()
-			notconfirm = False
-		
-	txdelay = stoppoint - startpoint
-	content = str(txdelay) + '\n'
-	f.write(content)
+        newaddress = Bclientproxy.call('getnewaddress')
+        txid = Aclientproxy.sendtoaddress(newaddress, 1 * COIN)
+        notconfirm = True
+        startpoint = time.time()
+        while notconfirm:
+                txinfo = Aclientproxy.gettransaction(txid)
+                if txinfo['confirmations'] == 0:
+                        time.sleep(0.05)
+                else:
+                        stoppoint = time.time()
+                        notconfirm = False
+                
+        txdelay = stoppoint - startpoint
+        datamatri.append(txdelay)
+        content = str(txdelay) + '\n'
+        f.write(content)
 
 f.close()
 
+plt.hist(datamatri, rwidth=0.5)
+plt.ylabel('Confirmation latency')
+plt.show()
 
 
 #Bclibalance = Bclientproxy.getbalance()/COIN
