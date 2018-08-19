@@ -33,10 +33,10 @@ for i in range(count):
         while notconfirm:
                 txinfo = Aclientproxy.gettransaction(txid)
                 if txinfo['confirmations'] == 0:
-                        time.sleep(0.05)
+                        time.sleep(0.005)
                 else:
                         stoppoint = time.time()
-                        notconfirm = False
+                        break
                 
         txdelay = stoppoint - startpoint
         datamatri.append(txdelay)
@@ -45,7 +45,7 @@ for i in range(count):
 
 f.close()
 
-plt.hist(datamatri, rwidth=0.5)
+plt.hist(datamatri)
 plt.ylabel('Confirmation latency')
 plt.show()
 
