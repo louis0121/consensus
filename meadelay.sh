@@ -6,7 +6,7 @@ sleep 2
 
 ./service.sh
 
-sleep 65
+sleep 125
 
 echo "start measure delay of transactions..."
 

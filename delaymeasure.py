@@ -20,7 +20,7 @@ clientconf = pwd + '/log/1/bitcoin.conf'
 Aclientproxy = bitcoin.rpc.Proxy(btc_conf_file = clientconf)
 
 filename = pwd + '/log/delaydata.txt'
-count = 10
+count = 50
 f = open(filename, "w")
 
 datamatri = []
