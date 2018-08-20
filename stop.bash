@@ -1,6 +1,6 @@
 #!/bin/bash
 
-nodecount=5
+nodecount=6
 
 basepath=$(cd `dirname $0`; pwd)
 echo "Stop Bitcoin regtest network."

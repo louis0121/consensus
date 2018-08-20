@@ -16,44 +16,52 @@ Aclientproxy = bitcoin.rpc.Proxy(btc_conf_file = clientconf)
 
 filename = pwd + '/log/tpsdata.txt'
 #count = 10
-transno = 5000
+transno = 1200
+addr_list = []
 
+starttime = time.time()
+print('Generate retrieving addresses...')
 for i in range(transno):
-	newaddress = Aclientproxy.call('getnewaddress')
-	txid = Bclientproxy.sendtoaddress(newaddress, 0.01 * COIN)
-#	if not (i % 100):
-#		print('i:',i)
-		
+    addr_list.append(Bclientproxy.call('getnewaddress'))
+
 preblockheight = Bclientproxy.getblockcount()
 
-notincrease = True
+print('Send transactions...')
+for each in addr_list:
+    txid = Aclientproxy.sendtoaddress(each, 0.01 * COIN)
 
-while notincrease:
-	blockheight = Bclientproxy.getblockcount()
-	if blockheight > preblockheight:
-		break
-	else:
-		time.sleep(1)
+endtime = time.time()
+timelength = endtime - starttime
+print('It takes', timelength, 'seconds.')
 
+print('last transaction id:', txid)
+print('Waiting last transaction confirmation...')
+notconfirm = True
+while notconfirm:
+    txinfo = Aclientproxy.gettransaction(txid)
+    if txinfo['confirmations'] == 0:
+        time.sleep(0.005)
+    else:
+        lastblockheight = Aclientproxy.getblockcount()
+        break
 
-blockhash = Bclientproxy.call('getblockhash', blockheight)
+content = ''
+maxtx = 0
+print('Finding the block with most transactions...')
+for i in range(preblockheight, lastblockheight+1, 1):
+    blockhash = Aclientproxy.call('getblockhash', i)
+    blockcontent = Aclientproxy.call('getblock', blockhash)
+    content = content + 'blockheight:' + str(i) +', tx number:' + str(len(blockcontent['tx'])) + '\n'
+    print('blockheight: ', i, '   tx number:', len(blockcontent['tx']))
+    if len(blockcontent['tx']) > maxtx:
+        maxtx = len(blockcontent['tx'])
+print('maxtx:', maxtx)
 
-blockcontent = Bclientproxy.call('getblock', blockhash)
-
-#print('blockcontent type:', type(blockcontent))
-
-print('tx number:', len(blockcontent['tx']))
-
-tpsmeasure = len(blockcontent['tx']) / 3
+tpsmeasure = maxtx / 3
+print('tpsmax:', tpsmeasure)
 
 f = open(filename, "w")
-content = str(tpsmeasure) + '\n'
+content = content + 'tpsmax:' + str(tpsmeasure) + '\n'
 f.write(content)
 f.close()
-
-
-
-
-
-
 

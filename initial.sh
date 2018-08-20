@@ -1,6 +1,6 @@
 #!/bin/bash
 
-nodecount=5
+nodecount=6
 iniport=18100
 inirpcport=18500
 
@@ -36,7 +36,9 @@ done
 
 #sleep 10
 
-bitcoin-cli -datadir=$basepath/log/1/ generate 525
+bitcoin-cli -datadir=$basepath/log/1/ generate 300
+bitcoin-cli -datadir=$basepath/log/2/ generate 300
+bitcoin-cli -datadir=$basepath/log/3/ generate 300
 
 #sleep 60
 
