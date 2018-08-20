@@ -103,7 +103,7 @@ class MeasureProcessing(threading.Thread):
 
 # function test         
 if __name__ == '__main__':
-    trannum = 30
+    trannum = 90
     sendnum = 3
     txnumber = trannum // sendnum
     

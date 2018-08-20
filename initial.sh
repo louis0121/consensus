@@ -36,18 +36,17 @@ done
 
 #sleep 10
 
-bitcoin-cli -datadir=$basepath/log/1/ generate 300
-bitcoin-cli -datadir=$basepath/log/2/ generate 300
-bitcoin-cli -datadir=$basepath/log/3/ generate 300
+bitcoin-cli -datadir=$basepath/log/1/ generate 30
+bitcoin-cli -datadir=$basepath/log/2/ generate 30
+bitcoin-cli -datadir=$basepath/log/3/ generate 30
+bitcoin-cli -datadir=$basepath/log/4/ generate 100
 
 #sleep 60
 
 netstat -apt | grep bitcoind
 
 bitcoin-cli -datadir=$basepath/log/1/ getbalance
-
-
-
-
+bitcoin-cli -datadir=$basepath/log/2/ getbalance
+bitcoin-cli -datadir=$basepath/log/3/ getbalance
 
 

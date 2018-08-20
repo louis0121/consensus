@@ -28,6 +28,5 @@ do
 done
 
 netstat -apt | grep python3
-#./minernode.py /home/ly/consensus/22/log/1/ /home/ly/consensus/22/log/1/bitcoin.conf
 
 
