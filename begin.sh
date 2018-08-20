@@ -1,6 +1,6 @@
 #!/bin/bash
 
-nodecount=5
+nodecount=6
 iniport=18100
 inirpcport=18500
 
@@ -39,9 +39,4 @@ done
 netstat -apt | grep bitcoind
 
 bitcoin-cli -datadir=$basepath/log/1/ getbalance
-
-
-
-
-
 
