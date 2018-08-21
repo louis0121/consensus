@@ -12,8 +12,8 @@ do
 	logpath=$basepath/log/$i/
 	confpath=$basepath/log/$i/bitcoin.conf
 	clientport=`expr $startport + $i`
-	#echo $logpath
-	#echo $confpath
+	echo $logpath
+	echo $confpath
 	echo $clientport
 	#sh worker.sh $logpath $confpath &
 	touch $logpath/clicf.ini

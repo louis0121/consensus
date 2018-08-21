@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Clients command
-bitcoin-cli -datadir=/home/ly/experiment/log/1 getbalance
+basepath=$(pwd)
 
-
+echo bitcoin-cli -datadir=$basepath/log/1 getbalance
 

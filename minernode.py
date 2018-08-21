@@ -33,7 +33,7 @@ def main():
 	cfpath = logdirectory + 'clicf.ini'
 	cf.read(cfpath)
 	nodenumber = int(cf.get('baseconf', 'nodenumber'))
-	#print('nodenumber:', nodenumber)
+	print('nodenumber:', nodenumber)
 	for i in range(nodenumber):
 		host = 'host' + str(i+1)
 		port = 'port' + str(i+1)
@@ -44,7 +44,6 @@ def main():
 		glovar.threadLock.acquire()
 		glovar.confnode.append((hostip, int(hostport)))
 		glovar.threadLock.release()
-	#print('NODE_LIST:', NODE_LIST)
 	
 	tcp_server = TcpServer(SERVER_ADDR, bindport, CONNECTIONMAX, logdirectory)
 	tcp_server.start()

@@ -59,7 +59,7 @@ class MiningProcessing(threading.Thread):
                                 while True:
                                         # resource control
                                         time.sleep(delay)
-                                        #print('nouce:', nounce)
+                                        print('nouce:', nounce)
                                         temp = str(prevhash) + pubkey + str(timepoint) + str(nounce)
                                         hashvalue = int(hashlib.sha256(temp.encode('utf-8')).hexdigest(), 16)
                                         if hashvalue < target:
