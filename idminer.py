@@ -26,9 +26,7 @@ class MiningProcessing(threading.Thread):
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
         delay = 0.0001    # hash speed latency
-#                try:
-#                       timelog = time.strftime("%Y-%m-%d %H:%M:%S ", time.localtime()) + 'Start mining process'
-#                       print(timelog)
+
         self.logger.info('Start mining process')
         cur_time = int(time.time())
         prev_time = cur_time - ( cur_time % BLOCKGEN_POINT )
@@ -60,7 +58,7 @@ class MiningProcessing(threading.Thread):
             while True:
                 # resource control
                 time.sleep(delay)
-                print('nouce:', nounce)
+                #print('nouce:', nounce)
                 temp = str(prevhash) + pubkey + str(timepoint) + str(nounce)
                 hashvalue = int(hashlib.sha256(temp.encode('utf-8')).hexdigest(), 16)
                 if hashvalue < target:
