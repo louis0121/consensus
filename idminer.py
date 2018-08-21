@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os, hashlib, time, threading, random, logging
+import os, hashlib, time, threading, random, logging, pdb
 
 from bitcoin.wallet import CBitcoinAddress, CBitcoinSecret
 
@@ -43,6 +43,7 @@ class MiningProcessing(threading.Thread):
                                 else:
                                         time.sleep(1)
                         
+                        pdb.set_trace()
                         glovar.threadLock.acquire()
                         prevhash = glovar.PREV_BLOCKHASH
                         blockheight = glovar.MINEDBLOCK_HEIGHT
