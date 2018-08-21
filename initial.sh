@@ -37,8 +37,11 @@ done
 #sleep 10
 
 bitcoin-cli -datadir=$basepath/log/1/ generate 30
+sleep 2
 bitcoin-cli -datadir=$basepath/log/2/ generate 30
+sleep 2
 bitcoin-cli -datadir=$basepath/log/3/ generate 30
+sleep 2
 bitcoin-cli -datadir=$basepath/log/4/ generate 100
 
 #sleep 60
