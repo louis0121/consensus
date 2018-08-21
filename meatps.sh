@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./paralleltps.py &

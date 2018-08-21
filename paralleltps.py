@@ -118,8 +118,8 @@ if __name__ == '__main__':
         else:
             time.sleep(5)
 
+#    print('start service.')
     os.system("./service.sh")
-    print('start service.')
 
     while notready:
         if (testover[0] and testover[1] and testover[2]):
@@ -127,6 +127,6 @@ if __name__ == '__main__':
         else:
             time.sleep(10)
 
-    print('end service.')
+#    print('end service.')
     os.system("./endservice.sh")
 
