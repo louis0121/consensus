@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os, time, threading, logging
+import os, time, threading, logging, #pdb
 
 import bitcoin.rpc
 from bitcoin.wallet import CBitcoinAddress
@@ -52,6 +52,9 @@ class MeasureProcessing(threading.Thread):
         for each in addr_list:
             txid = Aclientproxy.sendtoaddress(each, 0.01 * COIN)
         
+        #pdb.set_trace()
+        print('COIN:', COIN)
+
         endtime = time.time()
         timelength = endtime - starttime
         logcontent = 'client:' + str(self.sendclient) + ' takes ' + str(timelength) + ' seconds.'
@@ -103,7 +106,7 @@ class MeasureProcessing(threading.Thread):
 
 # function test         
 if __name__ == '__main__':
-    trannum = 90
+    trannum = 3000
     sendnum = 3
     txnumber = trannum // sendnum
     

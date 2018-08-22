@@ -3,6 +3,7 @@
 nodecount=6
 iniport=18100
 inirpcport=18500
+iniblock=40
 
 if [ -d ./log ]; then
 	echo "./log already exit, remove it."
@@ -34,22 +35,17 @@ do
     sleep 2
 done
 
-#sleep 10
-
-bitcoin-cli -datadir=$basepath/log/1/ generate 30
-sleep 2
-bitcoin-cli -datadir=$basepath/log/2/ generate 30
-sleep 2
-bitcoin-cli -datadir=$basepath/log/3/ generate 30
-sleep 2
+bitcoin-cli -datadir=$basepath/log/1/ generate $iniblock
+sleep 3
+bitcoin-cli -datadir=$basepath/log/2/ generate $iniblock
+sleep 3
+bitcoin-cli -datadir=$basepath/log/3/ generate $iniblock
+sleep 3
 bitcoin-cli -datadir=$basepath/log/4/ generate 100
-
-#sleep 60
 
 netstat -apt | grep bitcoind
 
 bitcoin-cli -datadir=$basepath/log/1/ getbalance
 bitcoin-cli -datadir=$basepath/log/2/ getbalance
 bitcoin-cli -datadir=$basepath/log/3/ getbalance
-
 

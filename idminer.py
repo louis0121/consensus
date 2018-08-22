@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os, hashlib, time, threading, random, logging, pdb
+import os, hashlib, time, threading, random, logging, #pdb
 
 from bitcoin.wallet import CBitcoinAddress, CBitcoinSecret
 
