@@ -3,7 +3,7 @@
 nodecount=6
 iniport=18100
 inirpcport=18500
-iniblock=40
+iniblock=2
 
 if [ -d ./log ]; then
 	echo "./log already exit, remove it."

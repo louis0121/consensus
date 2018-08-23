@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os, time, threading, logging, #pdb
+import os, time, threading, logging#, pdb
 
 import bitcoin.rpc
 from bitcoin.wallet import CBitcoinAddress
@@ -53,11 +53,11 @@ class MeasureProcessing(threading.Thread):
             txid = Aclientproxy.sendtoaddress(each, 0.01 * COIN)
         
         #pdb.set_trace()
-        print('COIN:', COIN)
+        #print('COIN:', COIN)
 
         endtime = time.time()
         timelength = endtime - starttime
-        logcontent = 'client:' + str(self.sendclient) + ' takes ' + str(timelength) + ' seconds.'
+        logcontent = 'client:' + str(self.sendclient) + ' takes ' + str(timelength) + ' seconds to send transactions.'
         self.logger.info(logcontent)
         #print('client:', self.sendclient, 'takes', timelength, 'seconds.')
 
@@ -70,7 +70,7 @@ class MeasureProcessing(threading.Thread):
         while notconfirm:
             txinfo = Aclientproxy.gettransaction(txid)
             if txinfo['confirmations'] == 0:
-                time.sleep(2)
+                time.sleep(1)
             else:
                 lastblockheight = Aclientproxy.getblockcount()
                 break
@@ -99,14 +99,9 @@ class MeasureProcessing(threading.Thread):
         testover[self.sendclient-1] = 1
         #print('client:', self.sendclient, 'find tpsmax:', tpsmeasure)
 
-        #f = open(filename, "w")
-        #content = content + 'tpsmax:' + str(tpsmeasure) + '\n'
-        #f.write(content)
-        #f.close()
-
 # function test         
 if __name__ == '__main__':
-    trannum = 3000
+    trannum = 200
     sendnum = 3
     txnumber = trannum // sendnum
     
@@ -121,6 +116,7 @@ if __name__ == '__main__':
         else:
             time.sleep(5)
 
+    time.sleep(30)
 #    print('start service.')
     os.system("./service.sh")
 
