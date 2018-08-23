@@ -1,32 +1,34 @@
 #!/bin/bash
 
-nodecount=3
-startport=18000
+# Read parameters from config file
+function __readINI() {
+ INIFILE=$1;	SECTION=$2;	ITEM=$3
+ _readIni=`awk -F '=' '/\['$SECTION'\]/{a=1}a==1&&$1~/'$ITEM'/{print $2;exit}' $INIFILE`
+echo ${_readIni}
+}
 
-basepath=$(cd `dirname $0`; pwd)
+INFILE=measure.ini
+SECTION=runconf
 
-#echo $basepath
+runnode=$(__readINI $INFILE $SECTION runnode)
+startport=$(__readINI $INFILE $SECTION startport)
 
-for ((i=1;i<=$nodecount;i++))
+basepath=$(pwd)
+
+for ((i=1;i<=$runnode;i++))
 do
 	logpath=$basepath/log/$i/
 	confpath=$basepath/log/$i/bitcoin.conf
 	clientport=`expr $startport + $i`
-#	echo $logpath
-#	echo $confpath
-#	echo $clientport
-	#sh worker.sh $logpath $confpath &
 	touch $logpath/clicf.ini
 	port1=`expr $startport + $i - 1`
 	#port2=`expr $startport + $i + 1`
 	filecontent="[baseconf]\nnodenumber=1\nhost1=localhost\nport1=$port1"
 	echo -e $filecontent > ./log/$i/clicf.ini
-    #sudo cpulimit -l 40 
     ./minernode.py $logpath $confpath $clientport &
 #	echo "start client $i"
 	sleep 8
 done
 
 #netstat -apt | grep python3
-
 

@@ -1,25 +1,26 @@
 #!/usr/bin/env python3
 
-import os, time, threading, logging#, pdb
+import os, time, threading, logging, configparser#, pdb
 
 import bitcoin.rpc
 from bitcoin.wallet import CBitcoinAddress
 from bitcoin.core import b2lx, lx, COIN
 
-teststate = [0,0,0]
-testover = [0,0,0]
+teststate = []
+testover = []
 
 class MeasureProcessing(threading.Thread):
-    def __init__(self, sendclient, txnumber):
+    def __init__(self, sendclient, txnumber, sendnum):
         threading.Thread.__init__(self)
         self.sendclient = sendclient
         self.txnumber = txnumber
+        self.sendnum = sendnum
 
     def run(self):
         global teststate
         global testover
         pwd = os.getcwd()
-        clientconf = pwd + '/log/' + str(self.sendclient+3) + '/bitcoin.conf'
+        clientconf = pwd + '/log/' + str(self.sendclient+self.sendnum) + '/bitcoin.conf'
         Bclientproxy = bitcoin.rpc.Proxy(btc_conf_file = clientconf)
         clientconf = pwd + '/log/' + str(self.sendclient) + '/bitcoin.conf'
         Aclientproxy = bitcoin.rpc.Proxy(btc_conf_file = clientconf)
@@ -37,7 +38,7 @@ class MeasureProcessing(threading.Thread):
 
         transno = self.txnumber
         addr_list = []
-        logcontent = 'client:' + str(self.sendclient+3) + ' generate retrieving addressess...'
+        logcontent = 'client:' + str(self.sendclient+self.sendnum) + ' generate retrieving addressess...'
         self.logger.info(logcontent)
         #print('client:', self.sendclient+3, ' generate retrieving addresses...')
         starttime = time.time()
@@ -86,8 +87,8 @@ class MeasureProcessing(threading.Thread):
             logcontent = 'blockheight:' + str(i) +', tx number:' + str(len(blockcontent['tx']))
             self.logger.info(logcontent)
             #print('client:', self.sendclient, ' find: blockheight: ', i, '   tx number:', len(blockcontent['tx']))
-            if len(blockcontent['tx']) > maxtx:
-                maxtx = len(blockcontent['tx'])
+            if len(blockcontent['tx']) - 1 > maxtx:
+                maxtx = len(blockcontent['tx']) - 1
 
         logcontent = 'client:' + str(self.sendclient) + ' find maxtx:' + str(maxtx)
         self.logger.info(logcontent)
@@ -99,33 +100,56 @@ class MeasureProcessing(threading.Thread):
         testover[self.sendclient-1] = 1
         #print('client:', self.sendclient, 'find tpsmax:', tpsmeasure)
 
-# function test         
-if __name__ == '__main__':
-    trannum = 200
-    sendnum = 3
+# main function
+def main():
+    pwd = os.getcwd()
+    cf = configparser.ConfigParser()
+    cfpath = pwd + '/measure.ini'
+    cf.read(cfpath)
+
+    trannum = int(cf.get('measureconf', 'sendtrannum'))
+    sendnum = int(cf.get('measureconf', 'sendnodenum'))
+    
     txnumber = trannum // sendnum
     
-    for i in range(3):
-        meaclient = MeasureProcessing(i+1,txnumber)
+    for i in range(sendnum):
+        teststate.append(0)
+        testover.append(0)
+        meaclient = MeasureProcessing(i+1,txnumber,sendnum)
         meaclient.start()
     
     notready = True
     while notready:
-        if (teststate[0] and teststate[1] and teststate[2]):
+        allreandy = True
+        for i in range(sendnum):
+            #print('i:', i)
+            if not teststate[i]:
+                allreandy = False
+
+        if allreandy:
             break
         else:
             time.sleep(5)
+
 
     time.sleep(30)
 #    print('start service.')
     os.system("./service.sh")
 
     while notready:
-        if (testover[0] and testover[1] and testover[2]):
+        allreandy = True
+        for i in range(sendnum):
+            if not testover[i]:
+                allreandy = False
+
+        if allreandy:
             break
         else:
-            time.sleep(10)
+            time.sleep(5)
 
 #    print('end service.')
     os.system("./endservice.sh")
 
+# function test         
+if __name__ == '__main__':
+    main()

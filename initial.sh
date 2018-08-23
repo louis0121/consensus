@@ -1,9 +1,21 @@
 #!/bin/bash
 
-nodecount=6
-iniport=18100
-inirpcport=18500
-iniblock=2
+# Read parameters from config file
+function __readINI() {
+ INIFILE=$1;	SECTION=$2;	ITEM=$3
+ _readIni=`awk -F '=' '/\['$SECTION'\]/{a=1}a==1&&$1~/'$ITEM'/{print $2;exit}' $INIFILE`
+echo ${_readIni}
+}
+
+INFILE=measure.ini
+SECTION=measureconf
+
+nodecount=$(__readINI $INFILE $SECTION bitcoindnum)
+iniport=$(__readINI $INFILE $SECTION bitcoindiniport)
+inirpcport=$(__readINI $INFILE $SECTION bitcoindinirpcport)
+iniblock=$(__readINI $INFILE $SECTION iniblocknum)
+bitcoindconnum=$(__readINI $INFILE $SECTION bitcoindconnum)
+sendnodenum=$(__readINI $INFILE $SECTION sendnodenum)
 
 if [ -d ./log ]; then
 	echo "./log already exit, remove it."
@@ -12,40 +24,47 @@ fi
 echo "create new node log directory"
 mkdir ./log
 
+basepath=$(pwd)
 for ((i=1;i<=$nodecount;i++))
 do
 	mkdir ./log/$i
 	touch ./log/$i/bitcoin.conf
 	port=`expr $iniport + $i`
 	rpcport=`expr $inirpcport + $i`
-	conport1=`expr $iniport + $i - 1`
-    conport2=`expr $iniport + $i - 2`
-    conport3=`expr $iniport + $i - 3`
-    filecontent="rpcuser = user\nrpcpassword = 123\nregtest = 1\nserver =
-    1\nport = $port\nrpcport = $rpcport\naddnode = localhost:$conport1\naddnode
-    = localhost:$conport2\naddnode = localhost:$conport3"
-	echo -e $filecontent > ./log/$i/bitcoin.conf
-done
 
-basepath=$(cd `dirname $0`; pwd)
-echo "Start Bitcoin regtest network."
-for ((i=1;i<=$nodecount;i++))
-do
+    preaddnode="\naddnode = localhost:"
+    addnode=""
+    for ((j=1;j<=$bitcoindconnum;j++))
+    do
+        conport=`expr $iniport + $i - $j`
+        midaddnode=${preaddnode}${conport}
+        addnode=${addnode}${midaddnode}
+    done
+
+    filecontent="rpcuser = user\nrpcpassword = 123\nregtest = 1\nserver =
+    1\nport = $port\nrpcport = $rpcport"$addnode
+
+	echo -e $filecontent > ./log/$i/bitcoin.conf
+
 	bitcoind -daemon -datadir=$basepath/log/$i/ -conf=$basepath/log/$i/bitcoin.conf
     sleep 2
 done
 
-bitcoin-cli -datadir=$basepath/log/1/ generate $iniblock
-sleep 3
-bitcoin-cli -datadir=$basepath/log/2/ generate $iniblock
-sleep 3
-bitcoin-cli -datadir=$basepath/log/3/ generate $iniblock
-sleep 3
-bitcoin-cli -datadir=$basepath/log/4/ generate 100
+echo "Initial block generation..."
+
+for ((i=1;i<=$sendnodenum;i++))
+do
+    bitcoin-cli -datadir=$basepath/log/$i/ generate $iniblock
+    sleep 3
+done
+
+lastnode=`expr $sendnodenum + 1`
+bitcoin-cli -datadir=$basepath/log/$lastnode/ generate 100
 
 netstat -apt | grep bitcoind
 
-bitcoin-cli -datadir=$basepath/log/1/ getbalance
-bitcoin-cli -datadir=$basepath/log/2/ getbalance
-bitcoin-cli -datadir=$basepath/log/3/ getbalance
+for ((i=1;i<=$sendnodenum;i++))
+do
+    bitcoin-cli -datadir=$basepath/log/$i/ getbalance
+done
 
