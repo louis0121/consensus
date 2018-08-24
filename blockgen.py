@@ -63,6 +63,8 @@ class BlockGeneration(threading.Thread):
 		self.logger.info('Generate an id block')
 		timestamp = time.time()
 		glovar.threadLock.acquire()
+		logcontent = '\nglovar.Pool_isbackup:' + str(glovar.Pool_isbackup)
+		self.logger.info(logcontent)
 		if glovar.Pool_isbackup:
 			idgeneration_pool = glovar.BACK_POOL.copy()
 			prevblockhash = glovar.BACKPREV_BLOCKHASH

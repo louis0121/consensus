@@ -11,8 +11,6 @@ INFILE=measure.ini
 SECTION=measureconf
 
 nodecount=$(__readINI $INFILE $SECTION bitcoindnum)
-iniport=$(__readINI $INFILE $SECTION bitcoindiniport)
-inirpcport=$(__readINI $INFILE $SECTION bitcoindinirpcport)
 
 basepath=$(pwd)
 echo "Start Bitcoin regtest network."
@@ -24,5 +22,6 @@ done
 
 netstat -apt | grep bitcoind
 
+echo "The balance of client 1:"
 bitcoin-cli -datadir=$basepath/log/1/ getbalance
 

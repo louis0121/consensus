@@ -100,21 +100,22 @@ class Queuehandle(threading.Thread):
 			newtarget = getidblock[2] * IDCONST
 		# Maintain key blockchain
 		IDkeyblock = []
+		glovar.threadLock.acquire()
 		for each in glovar.IDENTITY_LIST:
 			for every in getidblock[6]:
 				if each[1] == every[1]:
 					IDkeyblock.append(each)
 			if each[5] <= getidblock[0] - 2:
-				glovar.threadLock.acquire()
+				#glovar.threadLock.acquire()
 				glovar.IDENTITY_LIST.remove(each)
-				glovar.threadLock.release()
+				#glovar.threadLock.release()
 		
 		if getidblock[0] > 2: # and len(glovar.IDKEYCHAIN[0]) > 0 and glovar.IDKEYCHAIN[0][0][5] <= getidblock[0] - 2:
-			glovar.threadLock.acquire()
+			#glovar.threadLock.acquire()
 			glovar.IDKEYCHAIN.pop(0)
-			glovar.threadLock.release()
+			#glovar.threadLock.release()
 		
-		glovar.threadLock.acquire()
+		#glovar.threadLock.acquire()
 		if getidblock[0] == glovar.Generating_height:
 			glovar.BACKPREV_BLOCKHASH = glovar.PREV_BLOCKHASH
 			glovar.BACKMINEDBLOCK_HEIGHT = glovar.MINEDBLOCK_HEIGHT

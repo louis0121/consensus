@@ -8,12 +8,12 @@ echo ${_readIni}
 }
 
 INFILE=measure.ini
-SECTION=measureconf
+SECTION=runconf
 
-nodecount=$(__readINI $INFILE $SECTION bitcoindnum)
+runnode=$(__readINI $INFILE $SECTION runnode)
 basepath=$(pwd)
 
-for ((i=1;i<=$nodecount;i++))
+for ((i=1;i<=$runnode;i++))
 do
 	logpath=$basepath/log/$i/
 	cd $logpath
