@@ -70,10 +70,10 @@ class MeasureProcessing(multiprocessing.Process):
         self.lock.acquire()
         fs = open(syncname, 'r')
         line = fs.readline()
-        print("line:", line)
+        #print("line:", line)
         resu = int(line) + 1
         output = str(resu)
-        print("output:", output)
+        #print("output:", output)
         fs.close()
         fs = open(syncname, 'w')
         fs.write(output)
@@ -115,10 +115,10 @@ class MeasureProcessing(multiprocessing.Process):
         self.lock.acquire()
         fs = open(syncname, 'r')
         line = fs.readline()
-        print("line:", line)
+        #print("line:", line)
         resu = int(line) + 1
         output = str(resu)
-        print("output:", output)
+        #print("output:", output)
         fs.close()
         fs = open(syncname, 'w')
         fs.write(output)
@@ -135,6 +135,7 @@ def main():
 
     trannum = int(cf.get('measureconf', 'sendtrannum'))
     sendnum = int(cf.get('measureconf', 'sendnodenum'))
+    broadtime = int(cf.get('measureconf', 'broadtime'))
     
     txnumber = trannum // sendnum
     
@@ -164,7 +165,7 @@ def main():
             time.sleep(5)
 
 
-    time.sleep(10)
+    time.sleep(broadtime)
 #    print('start service.')
     os.system("./service.sh")
 
@@ -177,7 +178,7 @@ def main():
             break
         else:
             time.sleep(5)
-            print("line:", int(line))
+            #print("line:", int(line))
 
 #    print('end service.')
     os.system("./endservice.sh")
