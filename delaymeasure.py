@@ -20,7 +20,7 @@ clientconf = pwd + '/log/1/bitcoin.conf'
 Aclientproxy = bitcoin.rpc.Proxy(btc_conf_file = clientconf)
 
 filename = pwd + '/log/delaydata.txt'
-count = 50
+count = 5
 f = open(filename, "w")
 
 datamatri = []
@@ -47,37 +47,10 @@ f.close()
 
 plt.hist(datamatri)
 plt.ylabel('Confirmation latency')
+plt.savefig("./log/latency.png", dpi=600)
 plt.show()
 
 
-#Bclibalance = Bclientproxy.getbalance()/COIN
 #Aclibalance = Aclientproxy.getbalance()/COIN
 #print('Aclibalance:', Aclibalance)
-#print('Bclibalance:', Bclibalance)
-
-
-
-
-
-
-
-
-
-#txdelay = stoppoint - startpoint
-
-#txdelaytime = stoppoint - txinfo['time']
-
-#txinfo = Bclientproxy.gettransaction(txid)
-
-#txdelaytimereceived = stoppoint - txinfo['timereceived']
-
-#print('Delay of a transaction calculated by program is :', txdelay, 's.')
-#print('Delay of a transaction from wallet is :', txdelaytime, 's.')
-#print('Delay of a transaction from local B :', txdelaytimereceived, 's.')
-
-#Bclibalance = Bclientproxy.getbalance()/COIN
-#Aclibalance = Aclientproxy.getbalance()/COIN
-#print('Aclibalance:', Aclibalance)
-#print('Bclibalance:', Bclibalance)
-
 
