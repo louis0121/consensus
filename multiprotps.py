@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import sys, os, time, threading, logging, configparser#, pdb
+import sys, os, time, threading, logging, configparser, pdb
 import multiprocessing
 import queue
 
@@ -28,6 +28,7 @@ class MeasureProcessing(multiprocessing.Process):
 
         syncname = pwd + '/log/' + self.fname
         filename = pwd + '/log/tpsdata' + str(self.sendclient) +'.txt'
+        resulname = pwd + '/log/tpsall.txt'
         self.logger = logging.getLogger(str(self.sendclient))
         self.logger.setLevel(level = logging.INFO)
         handler = logging.FileHandler(filename)
@@ -55,7 +56,6 @@ class MeasureProcessing(multiprocessing.Process):
         for each in addr_list:
             txid = Aclientproxy.sendtoaddress(each, 0.01 * COIN)
         
-        #pdb.set_trace()
         #print('COIN:', COIN)
 
         endtime = time.time()
@@ -111,8 +111,12 @@ class MeasureProcessing(multiprocessing.Process):
         tpsmeasure = maxtx / 3
         logcontent = 'client:' + str(self.sendclient) + ' find tpsmax:' + str(tpsmeasure)
         self.logger.info(logcontent)
+        tpsresult = str(tpsmeasure) + '\n'
 
         self.lock.acquire()
+        fall = open(resulname, 'w')
+        fall.write(tpsresult)
+        fall.close()
         fs = open(syncname, 'r')
         line = fs.readline()
         #print("line:", line)
@@ -180,9 +184,19 @@ def main():
             time.sleep(5)
             #print("line:", int(line))
 
-#    print('end service.')
-    os.system("./endservice.sh")
+   # pdb.set_trace()
+    resulname = pwd + '/log/tpsall.txt'
+    fall = open(resulname, 'r')
+    line = fall.readline()
+    fall.close()
+    #print("create all data files.")
+    tpsrecordname = pwd + '/log/tpsrecord.txt'
+    ftps = open(tpsrecordname, 'a')
+    ftps.write(line)
+    ftps.close()
 
+    print('end service.')
+    os.system("./endservice.sh")
 # function test         
 if __name__ == '__main__':
     main()
