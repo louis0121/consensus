@@ -61,7 +61,7 @@ done
 lastnode=`expr $sendnodenum + 1`
 bitcoin-cli -datadir=$basepath/log/$lastnode/ generate 100
 
-netstat -apt | grep bitcoind
+#netstat -apt | grep bitcoind
 
 for ((i=1;i<=$sendnodenum;i++))
 do

@@ -54,7 +54,7 @@ class MeasureProcessing(multiprocessing.Process):
         self.logger.info(logcontent)
         #print('client:', self.sendclient, ' send transactions...')
         for each in addr_list:
-            txid = Aclientproxy.sendtoaddress(each, 0.01 * COIN)
+            txid = Aclientproxy.sendtoaddress(each, 0.001 * COIN)
         
         #print('COIN:', COIN)
 
@@ -111,18 +111,24 @@ class MeasureProcessing(multiprocessing.Process):
         tpsmeasure = maxtx / 3
         logcontent = 'client:' + str(self.sendclient) + ' find tpsmax:' + str(tpsmeasure)
         self.logger.info(logcontent)
-        tpsresult = str(tpsmeasure) + '\n'
+        tpsresult = str(tpsmeasure)
 
+        # Write the synchrous file and save tps measure value.
         self.lock.acquire()
-        fall = open(resulname, 'w')
-        fall.write(tpsresult)
+        fall = open(resulname, 'r')
+        line = fall.readline()
+        #print("line tpye:", type(line))
+        #print("line:", line)
+        retps = float(line)
+        if retps < tpsmeasure:
+            fall.close()
+            fall = open(resulname, 'w')
+            fall.write(tpsresult)
         fall.close()
         fs = open(syncname, 'r')
         line = fs.readline()
-        #print("line:", line)
         resu = int(line) + 1
         output = str(resu)
-        #print("output:", output)
         fs.close()
         fs = open(syncname, 'w')
         fs.write(output)
@@ -145,8 +151,12 @@ def main():
     
     fname = "notify.txt"
     syncname = pwd + '/log/' + fname
+    resulname = pwd + '/log/tpsall.txt'
     lock = multiprocessing.Lock()
     lock.acquire()
+    fall = open(resulname, 'w')
+    fall.write("0")
+    fall.close()
     fs = open(syncname, 'w')
     fs.write("0")
     fs.close()
@@ -185,16 +195,17 @@ def main():
             #print("line:", int(line))
 
    # pdb.set_trace()
-    resulname = pwd + '/log/tpsall.txt'
     fall = open(resulname, 'r')
     line = fall.readline()
     fall.close()
     #print("create all data files.")
     tpsrecordname = pwd + '/log/tpsrecord.txt'
     ftps = open(tpsrecordname, 'a')
-    ftps.write(line)
+    output = str(line) + "\n"
+    ftps.write(output)
     ftps.close()
 
+    time.sleep(8)
     print('end service.')
     os.system("./endservice.sh")
 # function test         

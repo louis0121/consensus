@@ -64,11 +64,12 @@ class Datablock(threading.Thread):
                 glovar.threadLock.release()
                 
                 #newproxy = bitcoin.rpc.Proxy(btc_conf_file = self.clientconf)
-                self.blockheight = self.proxy.getblockcount()
-                prevblockhash = b2lx(self.proxy.getblockhash(self.blockheight))
+                #self.blockheight = self.proxy.getblockcount()
+                #prevblockhash = b2lx(self.proxy.getblockhash(self.blockheight))
 #               timelog = time.strftime('\n%Y-%m-%d %H:%M:%S ', time.localtime())
 #               print(timelog, 'prevblockhash:', prevblockhash)
-                temp = prevblockhash + str(IDblock[4]) + str(self.date_stamp)
+                temp = str(IDblock[4]) + str(self.date_stamp)
+                #temp = prevblockhash + str(IDblock[4]) + str(self.date_stamp)
                 if IDblock[5] == 0:
                         return
                 pubchosen = int(hashlib.sha256(temp.encode('utf-8')).hexdigest(), 16) % IDblock[5]
