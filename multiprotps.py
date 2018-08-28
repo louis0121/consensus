@@ -27,7 +27,7 @@ class MeasureProcessing(multiprocessing.Process):
         Aclientproxy = bitcoin.rpc.Proxy(btc_conf_file = clientconf)
 
         syncname = pwd + '/log/' + self.fname
-        filename = pwd + '/log/tpsdata' + str(self.sendclient) +'.txt'
+        filename = pwd + '/tpsdata' + str(self.sendclient) +'.txt'
         resulname = pwd + '/log/tpsall.txt'
         self.logger = logging.getLogger(str(self.sendclient))
         self.logger.setLevel(level = logging.INFO)
@@ -199,7 +199,7 @@ def main():
     line = fall.readline()
     fall.close()
     #print("create all data files.")
-    tpsrecordname = pwd + '/log/tpsrecord.txt'
+    tpsrecordname = pwd + '/tpsrecord.txt'
     ftps = open(tpsrecordname, 'a')
     output = str(line) + "\n"
     ftps.write(output)

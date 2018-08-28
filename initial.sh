@@ -47,7 +47,7 @@ do
 	echo -e $filecontent > ./log/$i/bitcoin.conf
 
 	bitcoind -daemon -datadir=$basepath/log/$i/ -conf=$basepath/log/$i/bitcoin.conf
-    sleep 2
+    sleep 5
 done
 
 echo "Initial block generation..."
@@ -62,6 +62,7 @@ lastnode=`expr $sendnodenum + 1`
 bitcoin-cli -datadir=$basepath/log/$lastnode/ generate 100
 
 #netstat -apt | grep bitcoind
+sleep 2
 
 for ((i=1;i<=$sendnodenum;i++))
 do
