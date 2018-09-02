@@ -3,7 +3,7 @@
 basepath=$(pwd)
 echo "start measure tps of transactions..."
 
-testnum=3
+testnum=10
 for ((i=1;i<=$testnum;i++))
 do
     ./initial.sh
@@ -13,7 +13,7 @@ do
 	./multiprotps.py
     #bitcoin-cli -datadir=$basepath/log/4/ generate 6
     sleep 1
-    ./stop.bash
+    ./stop.bash >> mealog.txt
     sleep 2
 done
 
